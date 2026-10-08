@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Summit Rewards</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏔️%3C/text%3E%3C/svg%3E">
+<style>
+:root{--bg:#070b14;--card:#0d1423;--card2:#111a2e;--line:#1e2a45;--txt:#e8edf7;--mut:#8e9bb8;--gold:#f5b82e;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;--orange:#f97316;--pink:#ec4899;--teal:#14b8a6}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.hidden{display:none!important}
+.mut{color:var(--mut)}.neg{color:var(--red)}.pos{color:var(--green)}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--gold);color:#1a1200;border:0;border-radius:10px;padding:10px 16px;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+.btn.red{background:var(--red);color:#fff}.btn.green{background:var(--green);color:#04210e}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+input,select,textarea{width:100%;background:#0a1020;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:-1px}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 4px}
+small{display:block;margin-top:4px}
+
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.login .box{width:100%;max-width:400px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px}
+.brand{font-weight:900;letter-spacing:.6px}.brand b{color:var(--gold)}
+.login .brand{font-size:26px;text-align:center;margin-bottom:4px}
+.login p.sub{text-align:center;color:var(--mut);margin:0 0 10px}
+.login .btn{width:100%;margin-top:18px}
+.login a{display:block;text-align:center;margin-top:14px;color:var(--gold);cursor:pointer;font-size:14px}
+#lmsg{margin-top:12px;font-size:14px;color:var(--red);text-align:center}
+
+.app{display:flex;min-height:100vh}
+aside{width:220px;flex:none;background:#090f1c;border-right:1px solid var(--line);padding:16px 12px;position:sticky;top:0;height:100vh;overflow:auto;z-index:30}
+aside .brand{font-size:20px;padding:6px 10px 16px}
+.nav a{display:flex;gap:10px;align-items:center;padding:12px;border-radius:10px;color:var(--mut);cursor:pointer;margin-bottom:4px;user-select:none}
+.nav a.on{background:linear-gradient(90deg,#2b2308,transparent);color:var(--gold);box-shadow:inset 3px 0 var(--gold);font-weight:700}
+main{flex:1;min-width:0;padding:16px 22px 48px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.top h1{margin:0;font-size:22px;flex:1;min-width:120px}
+.top input[type=month]{width:auto}
+.who{font-size:13px;color:var(--mut);text-align:right}
+.burger{display:none;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:18px;cursor:pointer}
+.scrim{display:none}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px}
+.card h3{margin:0 0 12px;font-size:16px}
+.bar{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.bar .grow{flex:1;color:var(--mut)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:14px;padding:14px}
+.kpi .l{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font-size:28px;font-weight:800;margin:4px 0 2px}
+.kpi .s{font-size:12px;color:var(--mut)}
+.cols{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px}
+.cols>div{min-width:0}
+@media(max-width:1100px){.cols{grid-template-columns:minmax(0,1fr)}}
+
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:480px}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 10px;border-bottom:1px solid #16213a;vertical-align:middle}
+tr.me td{background:#1a1706}
+.rk{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--card2);font-size:13px;font-weight:700}
+td .acts{display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700;background:var(--card2)}
+.badge.g{background:#0f2b1b;color:var(--green)}.badge.r{background:#341214;color:var(--red)}
+.badge.y{background:#33270a;color:var(--gold)}.badge.b{background:#10244a;color:#7fb0ff}.badge.p{background:#25194a;color:#b79cff}
+.chip{display:inline-block;padding:4px 10px;border-radius:8px;background:#2a2208;color:var(--gold);font-size:12px;font-weight:700}
+
+.act{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #16213a}
+.act:last-child{border:0}
+.act .ic{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--card2);flex:none}
+.act .tx{flex:1;min-width:0}.act .tx b{display:block}.act .tx span{font-size:12px;color:var(--mut)}
+.act .pt{text-align:right;font-size:13px}.act .pt span{display:block;color:var(--mut);font-size:11px}
+
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.rgc{border-radius:12px;overflow:hidden;background:var(--card2);border:1px solid var(--line)}
+.rgc h4{margin:0;padding:8px 12px;font-size:13px;text-transform:uppercase;letter-spacing:.5px;background:var(--c);color:#06101f}
+.rgc div.r{display:flex;justify-content:space-between;gap:8px;padding:7px 12px;font-size:13px;border-top:1px solid #16213a}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.tile{border-radius:14px;padding:14px;color:#fff;display:flex;flex-direction:column;gap:6px;min-height:130px}
+.tile .tn{font-weight:800;font-size:15px}.tile .tc{font-size:20px;font-weight:800}.tile .ts{font-size:12px;opacity:.85}
+.tile .btn{margin-top:auto;background:#fff;color:#111}
+.t0{background:linear-gradient(135deg,#ec4899,#be185d)}.t1{background:linear-gradient(135deg,#f59e0b,#b45309)}
+.t2{background:linear-gradient(135deg,#3b82f6,#1d4ed8)}.t3{background:linear-gradient(135deg,#8b5cf6,#6d28d9)}
+.t4{background:linear-gradient(135deg,#22c55e,#15803d)}.t5{background:linear-gradient(135deg,#6366f1,#3730a3)}
+
+.modal{position:fixed;inset:0;background:#000b;display:flex;align-items:center;justify-content:center;z-index:60;padding:14px}
+.sheet{width:100%;max-width:540px;max-height:92vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.sheet h3{margin:0 0 6px}
+.sheet .row{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+#toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#14233f;border:1px solid var(--line);padding:12px 18px;border-radius:12px;z-index:90;max-width:92vw;text-align:center}
+#toast.bad{background:#3a1215;border-color:var(--red)}
+
+@media(max-width:900px){
+  aside{position:fixed;left:-250px;top:0;transition:left .2s;width:240px}
+  aside.open{left:0}
+  .scrim.on{display:block;position:fixed;inset:0;background:#0009;z-index:25}
+  .burger{display:inline-block}
+  main{padding:14px 12px 48px}
+}
+</style>
+</head>
+<body>
+
+<section id="login" class="login hidden">
+  <form class="box" id="loginForm">
+    <div class="brand">🏔️ SUMMIT <b>REWARDS</b></div>
+    <p class="sub" id="lsub">Controle de recompensas · MoveCash (MC$)</p>
+    <div id="nameBox" class="hidden"><label>Seu nome</label><input id="lname" autocomplete="name"></div>
+    <label>E-mail</label>
+    <input id="lemail" type="email" required autocomplete="username">
+    <label>Senha</label>
+    <input id="lpass" type="password" required minlength="6" autocomplete="current-password">
+    <button class="btn" id="lbtn">Entrar</button>
+    <div id="lmsg"></div>
+  </form>
+</section>
+
+<div id="app" class="app hidden">
+  <aside id="side">
+    <div class="brand">🏔️ SUMMIT <b>REWARDS</b></div>
+    <nav class="nav" id="nav"></nav>
+  </aside>
+  <div class="scrim" id="scrim" data-act="burger"></div>
+  <main>
+    <div class="top">
+      <button class="burger" data-act="burger">☰</button>
+      <h1 id="title"></h1>
+      <div id="ymwrap"><input type="month" id="ym"></div>
+      <div class="who"><div id="who"></div><a href="#" data-act="password" style="color:var(--gold)">Alterar senha</a> · <a href="#" data-act="logout" style="color:var(--gold)">Sair</a></div>
+    </div>
+    <div id="view"></div>
+  </main>
+</div>
+
+<div id="modal" class="modal hidden"></div>
+<div id="toast" class="hidden"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script>
+(() => {
+'use strict';
+
+/* ============ HELPERS ============ */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const num = n => Number(n || 0).toLocaleString('pt-BR');
+const mc = n => 'MC$ ' + num(n);
+const pad = n => String(n).padStart(2, '0');
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const nextYm = ym => { const [y, m] = ym.split('-').map(Number); return m === 12 ? `${y + 1}-01` : `${y}-${pad(m + 1)}`; };
+const fmtDate = d => d ? String(d).slice(0, 10).split('-').reverse().join('/') : '';
+const MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+const monthLabel = ym => { const [y, m] = ym.split('-'); return MONTHS[+m - 1] + '/' + y; };
+const addDays = (d, n) => { const x = new Date(d + 'T12:00:00'); x.setDate(x.getDate() + n); return `${x.getFullYear()}-${pad(x.getMonth() + 1)}-${pad(x.getDate())}`; };
+const pts = n => `<b class="${n < 0 ? 'neg' : 'pos'}">${n > 0 ? '+' : ''}${num(n)}</b>`;
+const COLORS = ['var(--green)', 'var(--blue)', 'var(--gold)', 'var(--purple)', 'var(--orange)', 'var(--pink)'];
+
+let toastTimer;
+function toast(msg, bad) {
+  const t = $('#toast');
+  t.textContent = msg; t.className = bad ? 'bad' : '';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 5000);
+}
+
+/* ============ API ============ */
+let token = null;
+try { token = localStorage.getItem('summit_token'); } catch (e) { /* navegador sem armazenamento */ }
+const setToken = t => { token = t; try { t ? localStorage.setItem('summit_token', t) : localStorage.removeItem('summit_token'); } catch (e) { /* ignora */ } };
+
+async function api(action, params) {
+  let r, j;
+  try {
+    r = await fetch('/api/rpc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+      body: JSON.stringify({ action, params: params || {} }),
+    });
+  } catch (e) { throw new Error('Sem conexão com o servidor.'); }
+  try { j = await r.json(); } catch (e) { throw new Error('Resposta inválida do servidor (a API do Vercel já foi publicada?).'); }
+  if (!r.ok) {
+    if (r.status === 401 && token) { setToken(null); state.me = null; showLogin(false, j.error); }
+    throw new Error(j.error || 'Erro desconhecido.');
+  }
+  return j.data;
+}
+
+const table = (heads, rows, empty = 'Nada por aqui ainda.') => rows.length
+  ? `<div class="tw"><table><thead><tr>${heads.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`
+  : `<p class="mut">${empty}</p>`;
+const card = (title, body) => `<div class="card">${title ? `<h3>${title}</h3>` : ''}${body}</div>`;
+const bar = html => `<div class="bar">${html}</div>`;
+const statusBadge = a => a ? '<span class="badge g">Ativo</span>' : '<span class="badge r">Inativo</span>';
+const labelBadge = l => `<span class="badge ${l === 'PKZ' ? 'y' : 'b'}">${esc(l)}</span>`;
+
+/* ============ STATE ============ */
+const state = { me: null, page: 'dashboard', ym: todayStr().slice(0, 7), cache: {} };
+const isAdmin = () => !!state.me && state.me.role === 'admin';
+
+const NAV_ADMIN = [['dashboard', '🏠', 'Dashboard'], ['professores', '👥', 'Professores'], ['alunos', '🎓', 'Alunos'], ['tarefas', '✅', 'Tarefas'], ['lancamentos', '➕', 'Lançamentos'], ['recompensas', '🎁', 'Recompensas'], ['relatorios', '📄', 'Relatórios']];
+const NAV_PROF = [['dashboard', '🏠', 'Dashboard'], ['alunos', '🎓', 'Meus alunos'], ['recompensas', '🎁', 'Recompensas'], ['extrato', '💰', 'Meu extrato']];
+
+/* ============ MODAL / FORM ============ */
+function closeModal() { const m = $('#modal'); m.classList.add('hidden'); m.innerHTML = ''; }
+function openSheet(html) {
+  const m = $('#modal');
+  m.innerHTML = `<div class="sheet">${html}</div>`;
+  m.classList.remove('hidden');
+}
+function fieldHtml(f) {
+  const v = f.value ?? '';
+  let input;
+  if (f.type === 'select') {
+    input = `<select name="${f.name}" ${f.required ? 'required' : ''}>${(f.options || []).map(o => `<option value="${esc(o.v)}" ${String(o.v) === String(v) ? 'selected' : ''}>${esc(o.l)}</option>`).join('')}</select>`;
+  } else if (f.type === 'textarea') {
+    input = `<textarea name="${f.name}" rows="2">${esc(v)}</textarea>`;
+  } else {
+    input = `<input name="${f.name}" type="${f.type || 'text'}" value="${esc(v)}" ${f.required ? 'required' : ''} ${f.min != null ? `min="${f.min}"` : ''} ${f.minlength ? `minlength="${f.minlength}"` : ''} ${f.list ? `list="${f.list}"` : ''} autocomplete="${f.auto || 'off'}">`;
+  }
+  return `<label>${esc(f.label)}</label>${input}${f.extra || ''}`;
+}
+function openForm({ title, fields, submit = 'Salvar', onSubmit, onOpen }) {
+  openSheet(`<h3>${esc(title)}</h3><form id="mform">${fields.map(fieldHtml).join('')}<div class="row"><button type="button" class="btn ghost" data-act="close">Cancelar</button><button class="btn">${submit}</button></div></form>`);
+  const form = $('#mform');
+  if (onOpen) onOpen(form);
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const btn = form.querySelector('.btn:not(.ghost)'); btn.disabled = true;
+    try { await onSubmit(Object.fromEntries(new FormData(form))); closeModal(); }
+    catch (err) { toast(err.message, true); btn.disabled = false; }
+  };
+}
+
+/* ============ RENDER ============ */
+const PAGES = {};
+let renderSeq = 0;
+async function render() {
+  const seq = ++renderSeq;
+  const nav = isAdmin() ? NAV_ADMIN : NAV_PROF;
+  if (!nav.some(n => n[0] === state.page)) state.page = 'dashboard';
+  $('#nav').innerHTML = nav.map(([k, i, l]) => `<a data-act="go" data-page="${k}" class="${k === state.page ? 'on' : ''}"><span>${i}</span>${l}</a>`).join('');
+  $('#title').textContent = nav.find(n => n[0] === state.page)[2];
+  $('#ymwrap').classList.toggle('hidden', !['dashboard', 'lancamentos', 'relatorios'].includes(state.page));
+  $('#ym').value = state.ym;
+  $('#side').classList.remove('open'); $('#scrim').classList.remove('on');
+  $('#view').innerHTML = '<div class="card mut">Carregando…</div>';
+  let html;
+  try { html = await PAGES[state.page](); }
+  catch (e) { html = `<div class="card neg">Erro: ${esc(e.message)}</div>`; }
+  if (seq === renderSeq) $('#view').innerHTML = html;
+}
+
+/* ============ DASHBOARD ============ */
+PAGES.dashboard = async () => {
+  const d = await api('dashboard', { ym: state.ym });
+  const { rank, tasks, rewards, recent, students } = d;
+  const me = state.me, adm = isAdmin();
+
+  let kpis;
+  if (adm) {
+    const earned = rank.reduce((s, r) => s + r.earned, 0), pen = rank.reduce((s, r) => s + r.penalties, 0);
+    const pkz = students.filter(s => s.label === 'PKZ').length;
+    kpis = [
+      ['🪙', 'MC$ distribuídos', num(earned), COLORS[2], `no mês · penalidades ${num(pen)}`],
+      ['👥', 'Professores ativos', rank.length, COLORS[1], 'no sistema'],
+      ['🎓', 'Alunos ativos', students.length, 'var(--teal)', `PKZ ${pkz} · One to One ${students.length - pkz}`],
+      ['✅', 'Lançamentos', d.monthCount, COLORS[0], 'tarefas pontuadas no mês'],
+      ['⏳', 'Resgates pendentes', d.pending, 'var(--red)', 'aguardando aprovação'],
+      ['🎁', 'Recompensas ativas', rewards.length, 'var(--orange)', 'no catálogo'],
+    ];
+  } else {
+    const lots = d.lots;
+    const bal = lots.reduce((s, l) => s + l.lot_amount, 0);
+    const soon = lots.filter(l => l.lot_expires <= addDays(todayStr(), 30)).reduce((s, l) => s + l.lot_amount, 0);
+    const mine = rank.find(r => r.teacher_id === me.id);
+    const pos = rank.findIndex(r => r.teacher_id === me.id) + 1;
+    kpis = [
+      ['🪙', 'Meu saldo', mc(bal), COLORS[2], 'MoveCash disponível'],
+      ['📅', 'A vencer em 30 dias', mc(soon), 'var(--red)', 'use antes de expirar'],
+      ['📈', 'Líquido no mês', (mine ? num(mine.earned + mine.penalties) : '0'), COLORS[0], mine ? `ganhos ${num(mine.earned)} · penalid. ${num(mine.penalties)}` : ''],
+      ['🏆', 'Minha posição', pos ? pos + 'º' : '—', COLORS[3], `de ${rank.length} professores`],
+      ['🎓', 'Meus alunos', students.length, 'var(--teal)', 'na carteira'],
+      ['⏳', 'Resgates pendentes', d.pending, 'var(--orange)', 'aguardando aprovação'],
+    ];
+  }
+  const kpiHtml = `<div class="kpis">${kpis.map(k => `<div class="kpi" style="--c:${k[3]}"><div class="l">${k[0]} ${k[1]}</div><div class="v">${k[2]}</div><div class="s">${k[4]}</div></div>`).join('')}</div>`;
+
+  const cats = [...new Set(tasks.map(t => t.category))];
+  const medal = i => ['🥇', '🥈', '🥉'][i] || `<span class="rk">${i + 1}</span>`;
+  const rankRows = rank.map((r, i) => {
+    const best = [...rewards].reverse().find(w => w.cost <= r.balance && w.stock > 0);
+    return `<tr class="${r.teacher_id === me.id ? 'me' : ''}"><td>${medal(i)}</td><td><b>${esc(r.name)}</b></td><td>🪙 <b>${num(r.balance)}</b></td><td>${pts(r.earned)}</td><td>${r.penalties ? pts(r.penalties) : '<span class="mut">0</span>'}</td>${cats.map(c => `<td>${num((r.by_category || {})[c] || 0)}</td>`).join('')}<td>${best ? `<span class="chip">${esc(best.name)}</span>` : '<span class="mut">—</span>'}</td></tr>`;
+  }).join('');
+  const rankHtml = card(`🏆 Ranking dos professores · ${monthLabel(state.ym)}`, rank.length
+    ? `<div class="tw"><table><thead><tr><th>#</th><th>Professor</th><th>Saldo</th><th>Mês +</th><th>Penalid.</th>${cats.map(c => `<th>${esc(c)}</th>`).join('')}<th>Recompensa</th></tr></thead><tbody>${rankRows}</tbody></table></div>`
+    : '<p class="mut">Nenhum professor ativo ainda.</p>');
+
+  const recentHtml = card('⚡ Últimas ações lançadas', recent.length ? recent.map(l => `
+    <div class="act"><div class="ic">${l.points < 0 ? '⚠️' : '✅'}</div>
+    <div class="tx"><b>${esc(l.teacher?.name || me.name)}</b><span>${esc(l.task?.name || '')}${l.student ? ' · ' + esc(l.student.name) : ''}</span></div>
+    <div class="pt">${pts(l.points)} MC$<span>${fmtDate(l.occurred_on)}</span></div></div>`).join('') : '<p class="mut">Sem lançamentos ainda.</p>');
+
+  const rg = cats.map((c, i) => `<div class="rgc" style="--c:${COLORS[i % 6]}"><h4>${esc(c)}</h4>${tasks.filter(t => t.category === c).map(t => `<div class="r"><span>${esc(t.name)}</span>${pts(t.points)}</div>`).join('')}</div>`).join('');
+  const rgHtml = card('⭐ Régua de pontuação', rg ? `<div class="rg">${rg}</div>` : '<p class="mut">Cadastre tarefas.</p>');
+  const catHtml = card('🎁 Catálogo de recompensas', rewards.length ? `<div class="tiles">${rewards.map((w, i) => tile(w, i)).join('')}</div>` : '<p class="mut">Sem recompensas.</p>');
+
+  return kpiHtml + `<div class="cols"><div>${rankHtml}</div><div>${recentHtml}</div></div>` + rgHtml + catHtml;
+};
+const tile = (w, i, btn = '') => `<div class="tile t${i % 6}"><div class="tn">${esc(w.name)}</div><div class="tc">🪙 ${num(w.cost)}</div><div class="ts">${w.stock > 0 ? w.stock + ' em estoque' : 'Esgotado'}</div>${btn}</div>`;
+
+/* ============ PROFESSORES (admin) ============ */
+PAGES.professores = async () => {
+  const { users, balances } = await api('users');
+  state.cache.users = users;
+  const rows = users.map(u => [
+    `<b>${esc(u.name)}</b>`, esc(u.email),
+    u.role === 'admin' ? '<span class="badge p">Administrador</span>' : '<span class="badge b">Professor</span>',
+    statusBadge(u.active),
+    u.role === 'professor' && balances[u.id] != null ? mc(balances[u.id]) : '—',
+    `<div class="acts"><button class="btn sm ghost" data-act="teacher-edit" data-id="${u.id}">Editar</button>${u.role === 'professor' ? `<button class="btn sm ghost" data-act="wallet" data-id="${u.id}" data-name="${esc(u.name)}">Extrato</button>` : ''}<button class="btn sm ghost" data-act="teacher-toggle" data-id="${u.id}">${u.active ? 'Desativar' : 'Ativar'}</button></div>`,
+  ]);
+  return bar('<div class="grow">Defina e-mail e senha inicial; o professor pode trocar a senha depois em “Alterar senha”.</div><button class="btn" data-act="teacher-new">+ Novo professor</button>')
+    + card('', table(['Nome', 'E-mail', 'Perfil', 'Acesso', 'Saldo MC$', ''], rows));
+};
+const teacherFields = (u, isNew) => [
+  { name: 'name', label: 'Nome', required: true, value: u.name },
+  { name: 'email', label: 'E-mail (será o login)', type: 'email', required: true, value: u.email, auto: 'off' },
+  { name: 'role', label: 'Perfil', type: 'select', value: u.role || 'professor', options: [{ v: 'professor', l: 'Professor' }, { v: 'admin', l: 'Administrador' }] },
+  { name: 'password', label: isNew ? 'Senha inicial (mín. 6 caracteres)' : 'Nova senha (deixe em branco para não alterar)', type: 'text', required: isNew, minlength: 6, auto: 'off' },
+];
+
+/* ============ ALUNOS ============ */
+PAGES.alunos = async () => {
+  const rows = await api('students');
+  state.cache.students = rows;
+  const act = rows.filter(r => r.active), pkz = act.filter(r => r.label === 'PKZ').length;
+  const adm = isAdmin();
+  const body = rows.map(s => [
+    `<b>${esc(s.name)}</b>`, labelBadge(s.label), esc(s.teacher?.name || '—'), statusBadge(s.active),
+    ...(adm ? [`<div class="acts"><button class="btn sm ghost" data-act="student-edit" data-id="${s.id}">Editar</button><button class="btn sm ghost" data-act="student-toggle" data-id="${s.id}">${s.active ? 'Desativar' : 'Ativar'}</button></div>`] : []),
+  ]);
+  return bar(`<div class="grow">Ativos: ${act.length} · PKZ ${pkz} · ONE TO ONE ${act.length - pkz}</div>${adm ? '<button class="btn" data-act="student-new">+ Novo aluno</button>' : ''}`)
+    + card('', table(['Aluno', 'Rótulo', 'Professor', 'Status', ...(adm ? [''] : [])], body));
+};
+async function teacherOptions(current) {
+  const t = (await api('teachers')).map(x => ({ v: x.id, l: x.name }));
+  if (current && !t.some(x => x.v === current.id)) t.push({ v: current.id, l: current.name + ' (inativo)' });
+  return t;
+}
+const studentFields = (s, opts) => [
+  { name: 'name', label: 'Nome do aluno', required: true, value: s.name },
+  { name: 'label', label: 'Rótulo', type: 'select', value: s.label || 'PKZ', options: [{ v: 'PKZ', l: 'PKZ' }, { v: 'ONE TO ONE', l: 'ONE TO ONE' }] },
+  { name: 'teacher_id', label: 'Professor responsável', type: 'select', required: true, value: s.teacher_id, options: opts },
+];
+
+/* ============ TAREFAS (admin) ============ */
+PAGES.tarefas = async () => {
+  const rows = await api('tasks');
+  state.cache.tasks = rows;
+  const body = rows.map(t => [
+    `<b>${esc(t.name)}</b>`, esc(t.category), pts(t.points), statusBadge(t.active),
+    `<div class="acts"><button class="btn sm ghost" data-act="task-edit" data-id="${t.id}">Editar</button><button class="btn sm ghost" data-act="task-toggle" data-id="${t.id}">${t.active ? 'Desativar' : 'Ativar'}</button></div>`,
+  ]);
+  return bar('<div class="grow">Pontos negativos funcionam como penalidade. Alterar o valor vale só para novos lançamentos.</div><button class="btn" data-act="task-new">+ Nova tarefa</button>')
+    + card('', table(['Tarefa', 'Categoria', 'MC$', 'Status', ''], body));
+};
+const taskFields = t => [
+  { name: 'name', label: 'Nome da tarefa', required: true, value: t.name },
+  { name: 'category', label: 'Categoria', required: true, list: 'cats', value: t.category || '', extra: '<datalist id="cats"><option>Captação</option><option>Acompanhamento</option><option>Carteira</option><option>Disciplina</option></datalist>' },
+  { name: 'points', label: 'Pontuação em MC$ (negativo = penalidade)', type: 'number', required: true, value: t.points ?? '' },
+];
+
+/* ============ LANÇAMENTOS (admin) ============ */
+PAGES.lancamentos = async () => {
+  const rows = await api('launches', { ym: state.ym });
+  const body = rows.map(l => [
+    fmtDate(l.occurred_on), `<b>${esc(l.teacher?.name || '')}</b>`, esc(l.task?.name || ''), esc(l.student?.name || '—'), pts(l.points),
+    `<span class="mut">${fmtDate(l.expires_on)}</span>`, esc(l.note || ''),
+    `<button class="btn sm red" data-act="launch-del" data-id="${l.id}">Excluir</button>`,
+  ]);
+  return bar(`<div class="grow">Lançamentos de ${monthLabel(state.ym)} · moedas vencem 60 dias após o fim do mês</div><button class="btn" data-act="launch-new">+ Novo lançamento</button>`)
+    + card('', table(['Data', 'Professor', 'Tarefa', 'Aluno', 'MC$', 'Vence em', 'Obs.', ''], body, 'Nenhum lançamento neste mês.'));
+};
+
+/* ============ RECOMPENSAS ============ */
+PAGES.recompensas = async () => {
+  const adm = isAdmin();
+  const { rewards, redemptions: reds, balance: bal } = await api('rewards');
+  state.cache.rewards = rewards;
+  const active = rewards.filter(r => r.active);
+  const tiles = active.map((w, i) => tile(w, i, adm ? '' : `<button class="btn sm" data-act="redeem" data-id="${w.id}" data-name="${esc(w.name)}" data-cost="${w.cost}" ${bal >= w.cost && w.stock > 0 ? '' : 'disabled'}>Resgatar</button>`)).join('');
+  const st = s => s === 'pending' ? '<span class="badge y">Aguardando</span>' : s === 'approved' ? '<span class="badge g">Aprovado</span>' : '<span class="badge r">Recusado</span>';
+  const redRows = reds.map(r => [
+    fmtDate(r.created_at), ...(adm ? [`<b>${esc(r.teacher?.name || '')}</b>`] : []), esc(r.reward_name), mc(r.cost), st(r.status),
+    ...(adm ? [r.status === 'pending' ? `<div class="acts"><button class="btn sm green" data-act="approve" data-id="${r.id}">Aprovar</button><button class="btn sm red" data-act="reject" data-id="${r.id}">Recusar</button></div>` : ''] : []),
+  ]);
+  let html = '';
+  if (!adm) html += bar(`<div class="grow">Seu saldo: <b>${mc(bal)}</b></div>`);
+  else html += bar('<div class="grow">Aprove os resgates para baixar o estoque e debitar os MC$ do professor.</div><button class="btn" data-act="reward-new">+ Nova recompensa</button>');
+  html += card('🎁 Catálogo', tiles ? `<div class="tiles">${tiles}</div>` : '<p class="mut">Sem recompensas ativas.</p>');
+  if (adm) {
+    html += card('Gerenciar recompensas', table(['Recompensa', 'Valor', 'Estoque', 'Status', ''], rewards.map(w => [
+      `<b>${esc(w.name)}</b>`, mc(w.cost), num(w.stock), statusBadge(w.active),
+      `<div class="acts"><button class="btn sm ghost" data-act="reward-edit" data-id="${w.id}">Editar</button><button class="btn sm ghost" data-act="reward-toggle" data-id="${w.id}">${w.active ? 'Desativar' : 'Ativar'}</button></div>`])));
+  }
+  html += card(adm ? 'Resgates' : 'Meus resgates', table(['Data', ...(adm ? ['Professor'] : []), 'Recompensa', 'Valor', 'Status', ...(adm ? [''] : [])], redRows, 'Nenhum resgate ainda.'));
+  return html;
+};
+const rewardFields = r => [
+  { name: 'name', label: 'Nome da recompensa', required: true, value: r.name },
+  { name: 'cost', label: 'Valor em MC$', type: 'number', min: 1, required: true, value: r.cost ?? '' },
+  { name: 'stock', label: 'Quantidade em estoque', type: 'number', min: 0, required: true, value: r.stock ?? '' },
+];
+
+/* ============ EXTRATO ============ */
+async function walletHtml(tid) {
+  const { lots, launches: ls, redemptions: rs } = await api('wallet', { teacher_id: tid });
+  const total = lots.reduce((s, l) => s + l.lot_amount, 0);
+  const soon = lots.filter(l => l.lot_expires <= addDays(todayStr(), 30)).reduce((s, l) => s + l.lot_amount, 0);
+  const kp = `<div class="kpis"><div class="kpi" style="--c:var(--gold)"><div class="l">Saldo válido</div><div class="v">${mc(total)}</div></div><div class="kpi" style="--c:var(--red)"><div class="l">Vence em 30 dias</div><div class="v">${mc(soon)}</div></div></div>`;
+  const lotRows = lots.map(l => [mc(l.lot_amount), fmtDate(l.lot_expires)]);
+  const st = s => s === 'pending' ? 'Aguardando' : s === 'approved' ? 'Aprovado' : 'Recusado';
+  return kp
+    + card('Saldo por validade', table(['MC$', 'Vence em'], lotRows, 'Sem moedas válidas.'))
+    + card('Lançamentos recentes', table(['Data', 'Tarefa', 'MC$', 'Vence em'], ls.map(l => [fmtDate(l.occurred_on), esc(l.task?.name || ''), pts(l.points), fmtDate(l.expires_on)]), 'Sem lançamentos.'))
+    + card('Resgates', table(['Data', 'Recompensa', 'MC$', 'Status'], rs.map(r => [fmtDate(r.created_at), esc(r.reward_name), mc(r.cost), st(r.status)]), 'Sem resgates.'));
+}
+PAGES.extrato = () => walletHtml(state.me.id);
+
+/* ============ RELATÓRIOS (admin) ============ */
+PAGES.relatorios = async () => {
+  const from = state.ym + '-01';
+  const { rank, closings } = await api('reports', { ym: state.ym });
+  const closed = closings.some(c => c.month === from);
+  const earned = rank.reduce((s, r) => s + r.earned, 0), pen = rank.reduce((s, r) => s + r.penalties, 0);
+  return bar(`<div class="grow">Mês selecionado: <b>${monthLabel(state.ym)}</b> · ${closed ? '<span class="badge r">Fechado</span>' : '<span class="badge g">Em aberto</span>'}</div>
+      <button class="btn" data-act="pdf">📄 Gerar PDF</button>
+      ${closed ? '<button class="btn ghost" data-act="reopen-month">Reabrir mês</button>' : '<button class="btn green" data-act="close-month">🔒 Fechar mês</button>'}`)
+    + `<div class="kpis"><div class="kpi" style="--c:var(--green)"><div class="l">Ganhos no mês</div><div class="v">${num(earned)}</div></div><div class="kpi" style="--c:var(--red)"><div class="l">Penalidades</div><div class="v">${num(pen)}</div></div><div class="kpi" style="--c:var(--gold)"><div class="l">Saldo geral</div><div class="v">${num(rank.reduce((s, r) => s + r.balance, 0))}</div></div></div>`
+    + card('Pontuação geral', table(['#', 'Professor', 'Ganhos', 'Penalid.', 'Líquido', 'Saldo atual'], rank.map((r, i) => [i + 1, `<b>${esc(r.name)}</b>`, pts(r.earned), pts(r.penalties), pts(r.earned + r.penalties), mc(r.balance)])))
+    + card('Meses fechados', table(['Mês', 'Fechado em'], closings.map(c => [monthLabel(c.month.slice(0, 7)), fmtDate(c.closed_at)]), 'Nenhum mês fechado ainda.'))
+    + '<p class="mut">Fechar o mês bloqueia novos lançamentos nele. As moedas continuam valendo por 60 dias após o último dia do mês.</p>';
+};
+
+/* ============ AÇÕES ============ */
+const ACTIONS = {};
+const byId = (list, id) => (state.cache[list] || []).find(x => x.id === id);
+ACTIONS.go = d => { state.page = d.page; render(); };
+ACTIONS.close = () => closeModal();
+ACTIONS.burger = () => { $('#side').classList.toggle('open'); $('#scrim').classList.toggle('on'); };
+ACTIONS.logout = () => { setToken(null); state.me = null; state.cache = {}; start(); };
+ACTIONS.password = () => openForm({
+  title: 'Alterar senha',
+  fields: [
+    { name: 'current', label: 'Senha atual', type: 'password', required: true, auto: 'current-password' },
+    { name: 'next', label: 'Nova senha (mín. 6 caracteres)', type: 'password', required: true, minlength: 6, auto: 'new-password' },
+  ],
+  onSubmit: async d => { await api('change_password', d); toast('Senha alterada'); },
+});
+
+// Professores
+ACTIONS['teacher-new'] = () => openForm({
+  title: 'Novo professor', fields: teacherFields({}, true),
+  onSubmit: async d => { await api('user_save', d); toast('Cadastrado! Passe o e-mail e a senha inicial ao professor.'); render(); },
+});
+ACTIONS['teacher-edit'] = d => {
+  const u = byId('users', d.id); if (!u) return;
+  openForm({ title: 'Editar cadastro', fields: teacherFields(u, false), onSubmit: async f => { await api('user_save', { ...f, id: d.id }); toast('Salvo'); render(); } });
+};
+ACTIONS['teacher-toggle'] = async d => { await api('user_toggle', { id: d.id }); render(); };
+ACTIONS.wallet = async d => {
+  openSheet(`<h3>Extrato · ${esc(d.name)}</h3><p class="mut">Carregando…</p>`);
+  try {
+    const html = await walletHtml(d.id);
+    openSheet(`<h3>Extrato · ${esc(d.name)}</h3>${html}<div class="row"><button class="btn ghost" data-act="close">Fechar</button></div>`);
+  } catch (e) { closeModal(); throw e; }
+};
+
+// Alunos
+ACTIONS['student-new'] = async () => {
+  const opts = await teacherOptions();
+  if (!opts.length) throw new Error('Cadastre um professor antes.');
+  openForm({ title: 'Novo aluno', fields: studentFields({}, opts), onSubmit: async d => { await api('student_save', d); toast('Aluno cadastrado'); render(); } });
+};
+ACTIONS['student-edit'] = async d => {
+  const s = byId('students', d.id); if (!s) return;
+  const opts = await teacherOptions({ id: s.teacher_id, name: s.teacher?.name || '' });
+  openForm({ title: 'Editar aluno', fields: studentFields(s, opts), onSubmit: async f => { await api('student_save', { ...f, id: d.id }); toast('Salvo'); render(); } });
+};
+ACTIONS['student-toggle'] = async d => { await api('student_toggle', { id: d.id }); render(); };
+
+// Tarefas
+ACTIONS['task-new'] = () => openForm({
+  title: 'Nova tarefa', fields: taskFields({}),
+  onSubmit: async d => { await api('task_save', d); toast('Tarefa criada'); render(); },
+});
+ACTIONS['task-edit'] = d => {
+  const t = byId('tasks', d.id); if (!t) return;
+  openForm({ title: 'Editar tarefa', fields: taskFields(t), onSubmit: async f => { await api('task_save', { ...f, id: d.id }); toast('Salvo'); render(); } });
+};
+ACTIONS['task-toggle'] = async d => { await api('task_toggle', { id: d.id }); render(); };
+
+// Lançamentos
+ACTIONS['launch-new'] = async () => {
+  const { teachers, tasks, students } = await api('launch_options');
+  if (!teachers.length || !tasks.length) throw new Error('Cadastre professores e tarefas antes de lançar.');
+  openForm({
+    title: 'Novo lançamento',
+    fields: [
+      { name: 'teacher_id', label: 'Professor que cumpriu', type: 'select', required: true, options: teachers.map(t => ({ v: t.id, l: t.name })) },
+      { name: 'task_id', label: 'Tarefa', type: 'select', required: true, options: tasks.map(t => ({ v: t.id, l: `${t.name} (${t.points > 0 ? '+' : ''}${t.points})` })) },
+      { name: 'student_id', label: 'Aluno (opcional)', type: 'select', options: [] },
+      { name: 'occurred_on', label: 'Data', type: 'date', required: true, value: todayStr() },
+      { name: 'points', label: 'MC$ (opcional — vazio usa o valor da tarefa)', type: 'number' },
+      { name: 'note', label: 'Observação', type: 'textarea' },
+    ],
+    onOpen: form => {
+      const t = form.elements.teacher_id, s = form.elements.student_id;
+      const fill = () => { s.innerHTML = '<option value="">— nenhum —</option>' + students.filter(x => x.teacher_id === t.value).map(x => `<option value="${x.id}">${esc(x.name)} (${esc(x.label)})</option>`).join(''); };
+      t.onchange = fill; fill();
+    },
+    onSubmit: async d => {
+      await api('launch_create', d);
+      state.ym = d.occurred_on.slice(0, 7);
+      toast('Lançamento registrado — MC$ creditados ao professor'); render();
+    },
+  });
+};
+ACTIONS['launch-del'] = async d => {
+  if (!confirm('Excluir este lançamento? Os MC$ serão removidos da carteira do professor.')) return;
+  await api('launch_delete', { id: d.id }); toast('Excluído'); render();
+};
+
+// Recompensas
+ACTIONS['reward-new'] = () => openForm({
+  title: 'Nova recompensa', fields: rewardFields({}),
+  onSubmit: async d => { await api('reward_save', d); toast('Recompensa criada'); render(); },
+});
+ACTIONS['reward-edit'] = d => {
+  const r = byId('rewards', d.id); if (!r) return;
+  openForm({ title: 'Editar recompensa', fields: rewardFields(r), onSubmit: async f => { await api('reward_save', { ...f, id: d.id }); toast('Salvo'); render(); } });
+};
+ACTIONS['reward-toggle'] = async d => { await api('reward_toggle', { id: d.id }); render(); };
+ACTIONS.redeem = async d => {
+  if (!confirm(`Resgatar "${d.name}" por MC$ ${d.cost}? O administrador precisa aprovar.`)) return;
+  await api('redeem', { reward_id: d.id }); toast('Pedido enviado! Aguarde a aprovação.'); render();
+};
+ACTIONS.approve = async d => { await api('approve', { id: d.id }); toast('Resgate aprovado'); render(); };
+ACTIONS.reject = async d => { if (!confirm('Recusar este resgate? Os MC$ voltam para o professor.')) return; await api('reject', { id: d.id }); toast('Resgate recusado'); render(); };
+
+// Fechamento do mês
+ACTIONS['close-month'] = async () => {
+  if (!confirm(`Fechar ${monthLabel(state.ym)}? Não será possível lançar ou excluir lançamentos nesse mês.`)) return;
+  await api('close_month', { ym: state.ym }); toast('Mês fechado. Gere o PDF!'); render();
+};
+ACTIONS['reopen-month'] = async () => {
+  if (!confirm(`Reabrir ${monthLabel(state.ym)}?`)) return;
+  await api('reopen_month', { ym: state.ym }); toast('Mês reaberto'); render();
+};
+
+// PDF
+ACTIONS.pdf = async () => {
+  if (!window.jspdf) throw new Error('A biblioteca de PDF não carregou. Verifique a internet e recarregue a página.');
+  toast('Gerando PDF…');
+  const ym = state.ym;
+  const { rank, launches: ls, redemptions: rs, students: st, closing: cl } = await api('pdf_data', { ym });
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  doc.setFillColor(11, 17, 32); doc.rect(0, 0, W, 74, 'F');
+  doc.setTextColor(245, 184, 46); doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.text('SUMMIT REWARDS', 40, 34);
+  doc.setTextColor(255, 255, 255); doc.setFont('helvetica', 'normal'); doc.setFontSize(11);
+  doc.text('Relatorio mensal de MoveCash (MC$) - ' + monthLabel(ym).normalize('NFD').replace(/[̀-ͯ]/g, ''), 40, 56);
+  doc.setTextColor(60); doc.setFontSize(9);
+  doc.text(`Situacao: ${cl ? 'MES FECHADO em ' + fmtDate(cl.closed_at) : 'mes em aberto'}  |  Emitido em ${new Date().toLocaleString('pt-BR')}`, 40, 92);
+
+  const earned = rank.reduce((s, r) => s + r.earned, 0), pen = rank.reduce((s, r) => s + r.penalties, 0);
+  const spent = rs.reduce((s, r) => s + r.cost, 0), saldo = rank.reduce((s, r) => s + r.balance, 0);
+  const styles = { fontSize: 9, cellPadding: 5 };
+  const head = { fillColor: [30, 42, 69], textColor: 255 };
+  doc.autoTable({ startY: 104, head: [['Total ganho', 'Penalidades', 'Resgates aprovados', 'Saldo geral (professores)']], body: [[num(earned), num(pen), num(spent), num(saldo)]], theme: 'grid', styles: { ...styles, halign: 'center', fontSize: 11 }, headStyles: head });
+
+  const spentBy = {}; rs.forEach(r => { spentBy[r.teacher_id] = (spentBy[r.teacher_id] || 0) + r.cost; });
+  const cnt = (tid, l) => st.filter(s => s.teacher_id === tid && s.label === l).length;
+  let y = doc.lastAutoTable.finalY + 26;
+  doc.setFontSize(12); doc.setTextColor(20); doc.text('Pontuacao geral dos professores', 40, y);
+  doc.autoTable({
+    startY: y + 8, theme: 'striped', styles, headStyles: head,
+    head: [['#', 'Professor', 'Ganhos', 'Penalid.', 'Liquido', 'Resgates', 'Saldo atual', 'PKZ', '1:1']],
+    body: rank.map((r, i) => [i + 1, r.name, num(r.earned), num(r.penalties), num(r.earned + r.penalties), num(spentBy[r.teacher_id] || 0), num(r.balance), cnt(r.teacher_id, 'PKZ'), cnt(r.teacher_id, 'ONE TO ONE')]),
+  });
+
+  const byTask = {};
+  ls.forEach(l => { const k = l.task?.name || '-'; (byTask[k] = byTask[k] || { cat: l.task?.category || '', qty: 0, total: 0 }); byTask[k].qty++; byTask[k].total += l.points; });
+  y = doc.lastAutoTable.finalY + 26;
+  if (y > 740) { doc.addPage(); y = 50; }
+  doc.setFontSize(12); doc.text('Lancamentos por tarefa', 40, y);
+  doc.autoTable({ startY: y + 8, theme: 'striped', styles, headStyles: head, head: [['Tarefa', 'Categoria', 'Qtd', 'Total MC$']], body: Object.entries(byTask).sort((a, b) => b[1].total - a[1].total).map(([k, v]) => [k, v.cat, v.qty, num(v.total)]) });
+
+  y = doc.lastAutoTable.finalY + 26;
+  if (y > 740) { doc.addPage(); y = 50; }
+  doc.setFontSize(12); doc.text('Resgates aprovados no mes', 40, y);
+  doc.autoTable({ startY: y + 8, theme: 'striped', styles, headStyles: head, head: [['Data', 'Professor', 'Recompensa', 'MC$']], body: rs.length ? rs.map(r => [fmtDate(r.decided_at), r.teacher?.name || '', r.reward_name, num(r.cost)]) : [['-', 'Nenhum resgate aprovado', '', '']] });
+
+  const n = doc.getNumberOfPages();
+  for (let i = 1; i <= n; i++) { doc.setPage(i); doc.setFontSize(8); doc.setTextColor(120); doc.text(`Summit Rewards - pagina ${i}/${n}`, W - 150, 826); }
+  doc.save(`SummitRewards_${ym}.pdf`);
+  toast('PDF gerado');
+};
+
+/* ============ EVENTOS ============ */
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const fn = ACTIONS[el.dataset.act]; if (!fn) return;
+  if (el.tagName === 'A') e.preventDefault();
+  try { await fn(el.dataset, el); } catch (err) { toast(err.message, true); }
+});
+$('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
+$('#ym').addEventListener('change', e => { if (e.target.value) { state.ym = e.target.value; render(); } });
+
+/* ============ LOGIN / PRIMEIRO ACESSO ============ */
+let setupMode = false;
+const lmsg = (t, ok) => { const m = $('#lmsg'); m.textContent = t || ''; m.style.color = ok ? 'var(--green)' : 'var(--red)'; };
+const show = w => { $('#login').classList.toggle('hidden', w !== 'login'); $('#app').classList.toggle('hidden', w !== 'app'); };
+function showLogin(setup, msg) {
+  setupMode = !!setup;
+  $('#nameBox').classList.toggle('hidden', !setup);
+  $('#lname').required = !!setup;
+  $('#lbtn').textContent = setup ? 'Criar administrador' : 'Entrar';
+  $('#lsub').textContent = setup ? 'Primeiro acesso: crie o administrador do sistema' : 'Controle de recompensas · MoveCash (MC$)';
+  $('#lpass').autocomplete = setup ? 'new-password' : 'current-password';
+  lmsg(msg);
+  show('login');
+}
+$('#loginForm').onsubmit = async e => {
+  e.preventDefault(); lmsg('');
+  const btn = $('#lbtn'); btn.disabled = true;
+  try {
+    const email = $('#lemail').value.trim(), password = $('#lpass').value;
+    const r = setupMode ? await api('setup', { name: $('#lname').value, email, password }) : await api('login', { email, password });
+    setToken(r.token); state.me = r.me; state.page = 'dashboard';
+    $('#lpass').value = '';
+    enter();
+  } catch (err) { lmsg(err.message); }
+  btn.disabled = false;
+};
+
+function enter() {
+  $('#who').textContent = `${state.me.name} · ${state.me.role === 'admin' ? 'Administrador' : 'Professor'}`;
+  show('app'); render();
+}
+async function start() {
+  try {
+    if (token) {
+      try { state.me = await api('me'); enter(); return; }
+      catch (e) { setToken(null); state.me = null; }
+    }
+    const st = await api('status');
+    showLogin(st.setup);
+  } catch (err) { showLogin(false, err.message); }
+}
+start();
+})();
+
+</script>
+</body>
+</html>
